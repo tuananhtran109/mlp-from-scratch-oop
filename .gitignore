@@ -1,0 +1,24 @@
+# Dữ liệu MNIST thô (không commit)
+data/raw/*
+!data/raw/.gitkeep
+
+# Cache Python và công cụ kiểm thử
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+
+# Môi trường ảo
+.venv/
+venv/
+env/
+
+# Thư mục đóng gói PyInstaller
+build/
+dist/
+*.spec
+
+# IDE
+.vscode/
+.idea/
