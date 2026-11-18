@@ -13,3 +13,6 @@
 - Nhánh `develop`: nhánh tích hợp chung.
 - Nhánh tính năng: `feature/a-<chủ-đề>` (Người A) và `feature/b-<chủ-đề>` (Người B).
 - Mở Pull Request vào `develop`, người còn lại duyệt trong 24 giờ và gộp bằng **merge commit** (không squash).
+## 3. Ph�n bi?t thu m?c c?u h�nh
+- `config/` (? thu m?c g?c d? �n): ch?a t?p d? li?u c?u h�nh `config.json`.
+- `src/digitapp/config/`: package m� ngu?n Python ch?a l?p `AppConfig` d�ng d? d?c v� ki?m tra t?p `config/config.json`.
