@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import TypeVar
 
 import numpy as np
 
 from nnlib.exceptions import InvalidConfigError, ShapeMismatchError, StateError
 from nnlib.tensor import Parameter, Tensor
+
+T = TypeVar("T")
 
 
 class Layer(ABC):
@@ -54,11 +57,12 @@ class Layer(ABC):
         """Bật chế độ suy luận (ví dụ: Dropout trả nguyên đầu vào)."""
         self._training = False
 
-    def _require_cache(self, cache: object | None) -> None:
-        """Kiểm tra cache đã tồn tại trước khi chạy backward."""
+    def _require_cache(self, cache: T | None) -> T:
+        """Kiểm tra cache đã tồn tại trước khi chạy backward và trả về cache."""
         # Rule R2
         if cache is None:
             raise StateError(f"{self._name}: backward() phải được gọi sau forward().")
+        return cache
 
     def state_dict(self) -> dict[str, np.ndarray]:
         """Trích xuất bản sao trọng số của lớp dưới dạng từ điển tên -> mảng."""
