@@ -123,3 +123,17 @@ def test_zeros_initializer_and_invalid_configs() -> None:
         XavierInitializer().initialize((10, 0))
     with pytest.raises(InvalidConfigError):
         ZerosInitializer().initialize(())
+
+
+def test_initializer_accepts_numpy_seed_and_rejects_np_bool() -> None:
+    """IInitializer chấp nhận seed kiểu số nguyên NumPy và chặn np.bool_."""
+    he_np = HeInitializer(seed=np.int64(42))
+    he_py = HeInitializer(seed=42)
+    assert he_np.seed == 42
+    assert np.array_equal(
+        he_np.initialize((4, 4)),
+        he_py.initialize((4, 4)),
+    )
+
+    with pytest.raises(InvalidConfigError):
+        HeInitializer(seed=np.bool_(True))  # type: ignore[arg-type]

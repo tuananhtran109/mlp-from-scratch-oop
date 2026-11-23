@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import numbers
 from abc import ABC, abstractmethod
 
 import numpy as np
@@ -13,12 +14,17 @@ from nnlib.exceptions import InvalidConfigError
 class IInitializer(ABC):
     """Interface định nghĩa chiến lược khởi tạo mảng trọng số theo shape."""
 
-    def __init__(self, seed: int | None = None) -> None:
+    def __init__(self, seed: numbers.Integral | None = None) -> None:
         """Khởi tạo bộ sinh số ngẫu nhiên với seed tùy chọn để tái lập."""
-        if seed is not None and (isinstance(seed, bool) or not isinstance(seed, int)):
-            raise InvalidConfigError("Tham số seed phải là số nguyên hoặc None.")
-        self._seed: int | None = seed
-        self._rng: np.random.Generator = np.random.default_rng(seed)
+        seed_int: int | None = None
+        if seed is not None:
+            if isinstance(seed, (bool, np.bool_)) or not isinstance(
+                seed, numbers.Integral
+            ):
+                raise InvalidConfigError("Tham số seed phải là số nguyên hoặc None.")
+            seed_int = int(seed)
+        self._seed: int | None = seed_int
+        self._rng: np.random.Generator = np.random.default_rng(seed_int)
 
     @property
     def seed(self) -> int | None:
@@ -33,7 +39,9 @@ class IInitializer(ABC):
                 f"Khởi tạo yêu cầu tối thiểu {min_ndim} chiều, " f"nhận được {shape}."
             )
         has_invalid_dim = any(
-            isinstance(dim, bool) or not isinstance(dim, int) or dim <= 0
+            isinstance(dim, (bool, np.bool_))
+            or not isinstance(dim, numbers.Integral)
+            or int(dim) <= 0
             for dim in shape
         )
         if has_invalid_dim:
