@@ -9,10 +9,12 @@ from nnlib.layers.activations import (
 )
 from nnlib.layers.base import Layer
 from nnlib.layers.dense import Dense
+from nnlib.layers.dropout import Dropout
 
 __all__ = [
     "Activation",
     "Dense",
+    "Dropout",
     "Layer",
     "ReLU",
     "Sigmoid",
