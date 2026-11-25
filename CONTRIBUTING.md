@@ -1,7 +1,11 @@
 # Quy ước và Hợp đồng phát triển dự án (CONTRIBUTING)
 
 ## 1. Quy ước kỹ thuật và lập trình
-- **Chiều dữ liệu**: Tensor theo chuẩn batch-first dạng `(N, đặc_trưng)`; nhãn phân loại dạng one-hot `(N, 10)`.
+- **Chiều dữ liệu & Biểu diễn nhãn**:
+  - Dữ liệu mạng nơ-ron tuân thủ chuẩn batch-first dạng `(N, đặc_trưng)`.
+  - Trong `MnistDataset`: Dữ liệu ảnh `_images` được chuẩn hóa về `[0.0, 1.0]` (chia `255.0` một lần duy nhất tại dataset), lưu dạng `np.ndarray` kiểu `float32` shape `(N, 784)`. Nhãn `_labels` lưu dạng mảng số nguyên `(N,)` kiểu `int64` nhằm tiết kiệm bộ nhớ và phục vụ trực tiếp tính ma trận nhầm lẫn (`ConfusionMatrix`).
+  - Trong `DataLoader`: Nhãn được chuyển đổi sang vector one-hot `(B, 10)` kiểu `float32` thông qua `OneHotEncoder(num_classes=10)` khi `one_hot=True` (mặc định).
+  - Quy ước chuyển đổi `ndarray` $\to$ `Tensor`: `DataLoader` sinh dữ liệu batch dạng mảng thuần NumPy `np.ndarray`. Việc bọc `np.ndarray` thành `Tensor` cho cả dữ liệu đầu vào và nhãn one-hot do `Trainer` (ở Tuần 2) thực hiện trước khi đưa vào mô hình và hàm loss.
 - **Gradient theo batch**: Hàm loss trả về gradient đã chia cho kích thước lô `N`, nên các `Layer` tuyệt đối không chia lại cho `N`.
 - **Cộng dồn gradient**: Gradient được cộng dồn (`+=`) trong phương thức `backward()`; việc đặt lại gradient về `0` do `IOptimizer.zero_grad()` gọi.
 - **Kiểu dữ liệu số thực**: Dùng `float32` khi huấn luyện mô hình và dùng `float64` khi chạy gradient check.
